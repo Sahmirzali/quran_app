@@ -12,6 +12,6 @@ There is still so much to improve, if you want to contribute whether it's a feat
 
 ## Screenshot (Light theme)
 <p float="left">
-  <img src="https://dribbble.com/shots/12671843-Quran-App-Concept-with-Surah-view/attachments/4271351?mode=media" width="200" />
+  <img src="https://static.dribbble.com/users/844046/screenshots/12671843/media/db8230db80481c803d50278d7c39c262.jpg" width="200" />
 
 </p>
