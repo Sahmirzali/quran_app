@@ -12,7 +12,7 @@ There is still so much to improve, if you want to contribute whether it's a feat
 
 ## Quran app icon
 <p float="left">
-  <img src="https://i.ibb.co/9vF1qCd/Asset-2workspace.png" width="125" />
+  <img src="https://i.ibb.co/9vF1qCd/Asset-2workspace.png" width="110" />
 
 </p>
 
