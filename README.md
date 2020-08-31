@@ -1,16 +1,11 @@
-# quran_app
+# Quran_app
 
-A new Flutter project.
+Quran app built with Flutter
 
-## Getting Started
+Features:
+ Support dark and ligth theme
+ Search ayahs
+ Bookmark ayat
+ And some basic features
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+There is still so much to improve, if you want to contribute whether it's a feature or a bug you can send a Pull Request, maybe I can check it out
