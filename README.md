@@ -2,7 +2,7 @@
 
 Quran app built with Flutter
 
-Features:
+### Features:
  Support dark and ligth theme
  Search ayahs
  Bookmark ayat
