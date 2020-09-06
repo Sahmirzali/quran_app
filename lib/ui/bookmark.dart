@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran_app/data/Surah.dart';
 import 'package:quran_app/ui/bookmark_detail.dart';
 import 'detail_surah.dart';
 import 'package:quran_app/data/models/allsurah.dart';
@@ -15,7 +16,7 @@ class Bookmark extends StatefulWidget {
 class _BookmarkState extends State<Bookmark> {
   var database;
 
-  List<AllSurah> allsurah = List<AllSurah>();
+  List<Surah> allsurah = List<Surah>();
 
   Future initDb() async {
     database = await openDatabase(
@@ -35,19 +36,20 @@ class _BookmarkState extends State<Bookmark> {
     });
   }
 
-  Future<List<AllSurah>> getPeople() async {
+  Future<List<Surah>> getPeople() async {
     // Get a reference to the database.
     final Database db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query('allsurah');
 
     return List.generate(maps.length, (i) {
-      return AllSurah(
+      return Surah(
         id: maps[i]['id'],
         text: maps[i]['text'] as String,
         translation: maps[i]['translation'] as String,
         surahNumber: maps[i]['surahNumber'] as String,
         verseNumber: maps[i]['verseNumber'] as String,
+        surahName: maps[i]['surahName'] as String,
       );
     });
   }
@@ -84,24 +86,18 @@ class _BookmarkState extends State<Bookmark> {
           itemBuilder: (context, index) {
             var allsurahdata = allsurah[index];
             return ListTile(
-              title: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(allsurahdata.surahNumber.toString()),
-                      SizedBox(width: 5,),
-                      Text(allsurahdata.verseNumber.toString()),
-                    ],
-                  ),
-                  Text(allsurahdata.translation),
-                ],
+              leading: Icon(
+                Icons.collections_bookmark,
+                size: 30,
               ),
+              title: Text(
+                  "${allsurahdata.surahNumber}.${allsurahdata.surahName} surəsi ${allsurahdata.verseNumber} ayə"),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => BookmarkDetail(
-                            //id: index,
+                            id: index,
                             //indexx: allsurah[index].verseNumber,
                             indexx: allsurahdata.verseNumber,
                             detail: allsurah[index].verseNumber.toString(),
@@ -109,12 +105,8 @@ class _BookmarkState extends State<Bookmark> {
                           )),
                 );
               },
-              trailing: RaisedButton(
+              trailing: IconButton(
                 color: Colors.red,
-                child: Text(
-                  "Delete",
-                  style: TextStyle(color: Colors.white),
-                ),
                 onPressed: () {
                   deletePerson(allsurahdata.id).then((value) {
                     getPeople().then((value) {
@@ -124,6 +116,7 @@ class _BookmarkState extends State<Bookmark> {
                     });
                   });
                 },
+                icon: Icon(Icons.delete_forever),
               ),
             );
           }),

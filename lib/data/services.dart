@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+
 import 'package:quran_app/data/models/allsurah.dart';
 
 import 'package:quran_app/data/models/surah_info.dart';
 import 'package:flutter/services.dart';
-import 'package:quran_app/data/utils/config_helper.dart';
+
 
 class ServiceData {
   var infosurah = 'surah/surah-info.json';

@@ -1,5 +1,10 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
+import 'package:quran_app/data/DbHelper.dart';
+import 'package:quran_app/data/Surah.dart';
 import 'package:quran_app/data/models/allsurah.dart';
 import 'package:quran_app/data/services.dart';
 import 'package:quran_app/data/uistate.dart';
@@ -18,11 +23,19 @@ import 'package:sqflite/sqflite.dart';
 class DetailSurah extends StatefulWidget {
   final detail;
   final information;
+  final type;
+  final ayahcount;
 
   final String indexx;
 
   DetailSurah(
-      {Key key, @required this.detail, this.indexx, this.id, this.information})
+      {Key key,
+      @required this.detail,
+      this.indexx,
+      this.id,
+      this.information,
+      this.type,
+      this.ayahcount})
       : super(key: key);
 
   final id;
@@ -49,7 +62,7 @@ class _DetailSurahState extends State<DetailSurah> {
       join(await getDatabasesPath(), 'allsurah_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE allsurah(id INTEGER PRIMARY KEY,  text TEXT, translation TEXT, surahNumber TEXT, verseNumber TEXT)",
+          "CREATE TABLE allsurah(id INTEGER PRIMARY KEY,  text TEXT, translation TEXT, surahName TEXT, surahNumber TEXT, verseNumber TEXT)",
         );
       },
       version: 1,
@@ -65,9 +78,9 @@ class _DetailSurahState extends State<DetailSurah> {
   //bookmark icin
   //sorunlu yer neresiydi
 
-  Future<void> insertAyah(AllSurah surah) async {
+  Future<void> insertAyah(Surah surah) async {
     if (surah != null) {
-      print('surah is not null ' + surah.surahNumber.toString());
+      print('surah is not null ' + surah.surahNumber);
       final Database db = await database;
       await db.insert(
         'allsurah',
@@ -79,12 +92,19 @@ class _DetailSurahState extends State<DetailSurah> {
     }
   }
 
+  double deviceHeight(BuildContext context) =>
+      MediaQuery.of(context).size.height;
+
+  double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
+
   String ayetid;
   @override
   Widget build(BuildContext context) {
+    var textScale = MediaQuery.of(context).textScaleFactor;
     var ui = Provider.of<UiState>(context);
     return Scaffold(
-        appBar: AppBar(
+        backgroundColor: Colors.white,
+        /*appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.keyboard_backspace),
             onPressed: () => Navigator.of(context).pop(),
@@ -100,15 +120,108 @@ class _DetailSurahState extends State<DetailSurah> {
               },
             )
           ],
-        ),
-        body: FutureBuilder<List<AllSurah>>(
-          future: ServiceData().loadSurah(widget.indexx),
+        ),*/
+        body: FutureBuilder<List<Surah>>(
+          future: SurahDatabase().getSurahList(widget.indexx),
           builder: (c, snapshot) {
             return snapshot.hasData
                 ? SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(child: Text('sure aciklamasi')),
+                        SizedBox(
+                          height: 43,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.keyboard_backspace),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                                Text(
+                                  "${widget.detail} surəsi",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 20 * textScale,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.deepPurple[900]),
+                                ),
+                              ],
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.more_vert),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Settings()));
+                              },
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text(
+                                  widget.detail == null
+                                      ? " "
+                                      : "${widget.detail}",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 26 * textScale,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  widget.type == null ? " " : widget.type,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 16 * textScale,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white),
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                Text(
+                                  widget.ayahcount.toString() == null
+                                      ? " "
+                                      : "${widget.ayahcount.toString()} ayədir",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 16 * textScale,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white),
+                                ),
+                                SizedBox(
+                                  height: 55,
+                                ),
+                              ],
+                            ),
+                          ),
+                          height: MediaQuery.of(context).size.height * 0.33334,
+                          width: MediaQuery.of(context).size.width * 0.86888,
+                          //height: MediaQuery.of(context).size.height - 420.0,
+                          //width: MediaQuery.of(context).size.width - 49.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              //color: Colors.blue,
+                              image: DecorationImage(
+                                  image: AssetImage("images/lastayah.jpg"),
+                                  fit: BoxFit.fill)),
+                        ),
                         ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
@@ -116,57 +229,116 @@ class _DetailSurahState extends State<DetailSurah> {
                             itemBuilder: (BuildContext context, int i) {
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 15.0, vertical: 8.0),
+                                    horizontal: 15.0, vertical: 7.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     SizedBox(
-                                      height: 18,
+                                      height: 5,
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(snapshot.data[i].verseNumber
-                                            .toString()),
-                                        SizedBox(
-                                          width: 20,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFF863ED5)
+                                              .withOpacity(0.0666666),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      //color: Colors.grey,
+                                      height: 47,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            //SizedBox(width: 0,),
+
+                                            Text(
+                                              snapshot.data[i].verseNumber,
+                                              style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black87),
+                                            ),
+
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                    icon: Icon(
+                                                      Icons.bookmark,
+                                                    ),
+                                                    onPressed: () {
+                                                      insertAyah(
+                                                          snapshot.data[i]);
+                                                    }),
+                                                IconButton(
+                                                    icon: Icon(
+                                                      snapshot.data[i]
+                                                                  .verseNumber ==
+                                                              ayetid
+                                                          ? Icons.favorite
+                                                          : Icons
+                                                              .favorite_border,
+                                                    ),
+                                                    onPressed: () async {
+                                                      await ConfigHelper()
+                                                          .addShared(
+                                                              snapshot.data[i]
+                                                                  .verseNumber,
+                                                              snapshot.data[i]
+                                                                  .surahNumber
+                                                                  .toString());
+                                                      ayetid = snapshot
+                                                          .data[i].verseNumber;
+                                                      await ConfigHelper()
+                                                          .addSharedOther(
+                                                              widget.detail,
+                                                              snapshot.data[i]
+                                                                  .verseNumber);
+                                                      setState(() {});
+                                                    }),
+                                                IconButton(
+                                                    icon: Icon(
+                                                      Icons.content_copy,
+                                                    ),
+                                                    onPressed: () {
+                                                      Clipboard.setData(
+                                                          ClipboardData(
+                                                              text: snapshot
+                                                                  .data[i]
+                                                                  .translation));
+                                                      Flushbar(
+                                                        //title: "Hey Ninja",
+                                                        message:
+                                                            "Ayə uğurla kopyalandı",
+                                                        duration: Duration(
+                                                            seconds: 3),
+                                                      )..show(context);
+                                                    }),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.bookmark,
-                                            ),
-                                            onPressed: () {
-                                              insertAyah(snapshot.data[i]);
-                                            }),
-                                        IconButton(
-                                            icon: Icon(
-                                              snapshot.data[i].verseNumber ==
-                                                      ayetid
-                                                  ? Icons.favorite
-                                                  : Icons.favorite_border,
-                                            ),
-                                            onPressed: () async {
-                                              await ConfigHelper().addShared(
-                                                  snapshot.data[i].verseNumber,
-                                                  snapshot.data[i].surahNumber
-                                                      .toString());
-                                              ayetid =
-                                                  snapshot.data[i].verseNumber;
-                                              await ConfigHelper()
-                                                  .addSharedOther(
-                                                      widget.detail,
-                                                      snapshot
-                                                          .data[i].verseNumber);
-                                              setState(() {});
-                                            }),
-                                      ],
+                                      ),
                                     ),
                                     SizedBox(
                                       height: 20,
                                     ),
                                     if (ui.arabic)
-                                      Text(
-                                        snapshot.data[i].text,
-                                        textDirection: TextDirection.rtl,
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          snapshot.data[i].text,
+                                          textDirection: TextDirection.rtl,
+                                          style: TextStyle(
+                                            fontSize: ui.fontSize,
+                                            fontFamily: 'Uthman',
+                                            height: 1.5,
+                                          ),
+                                        ),
                                       ),
                                     /*ListTile(
                                         leading: Column(
@@ -183,19 +355,23 @@ class _DetailSurahState extends State<DetailSurah> {
                                           ),
                                         ),
                                       ),*/
+                                    SizedBox(
+                                      height: 20,
+                                    ),
                                     if (ui.terjemahan)
                                       Column(
                                         children: <Widget>[
-                                          AppStyle.spaceH10,
-                                          Text(
-                                            'Translation',
-                                            style: AppStyle.end2subtitle,
-                                          ),
                                           AppStyle.spaceH5,
                                           Text(
                                             snapshot.data[i].translation,
-                                            textDirection: TextDirection.rtl,
+                                            //toolbarOptions: ToolbarOptions(
+                                            //  copy: true,
+                                            //  selectAll: true,
+                                            // ),
+                                            textDirection: TextDirection.ltr,
                                             style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontWeight: FontWeight.w400,
                                               fontSize: ui.fontSizetext,
                                             ),
                                           ),
@@ -204,11 +380,18 @@ class _DetailSurahState extends State<DetailSurah> {
                                   ],
                                 ),
                               );
-                            })
+                            }),
+                        SizedBox(
+                          height: 20,
+                        ),
                       ],
                     ),
                   )
-                : Center(child: CircularProgressIndicator());
+                : PKCardListSkeleton(
+                    isCircularImage: false,
+                    isBottomLinesActive: true,
+                    length: 10,
+                  );
           },
         ));
   }

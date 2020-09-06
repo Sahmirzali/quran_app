@@ -40,13 +40,6 @@ class _SettingsState extends State<Settings> {
                 onChanged: (newValue) => ui.terjemahan = newValue,
               ),
             ),
-            CardSetting(
-              title: 'Tafsir',
-              leading: Switch(
-                value: ui.tafsir,
-                onChanged: (newValue) => ui.tafsir = newValue,
-              ),
-            ),
             CardSlider(
               title: 'Ərəbcə text size',
               slider: Slider(

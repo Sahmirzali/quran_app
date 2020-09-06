@@ -9,7 +9,7 @@ class BookmarkDetail extends StatefulWidget {
 
   final String indexx;
 
-  BookmarkDetail({Key key, this.detail, this.information, this.indexx, this.datam})
+  BookmarkDetail({Key key, this.detail, this.information, this.indexx, this.datam, int id})
       : super(key: key);
 
   @override

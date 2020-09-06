@@ -37,10 +37,10 @@ class AllSurah {
 
   Map<String, dynamic> toMap() {
     return {
-      'surah_name': surahName,
       'id': id,
       'text': text,
       'translation': translation,
+      'surahName': surahName,
       'surahNumber': surahNumber,
       'verseNumber': verseNumber,
     };

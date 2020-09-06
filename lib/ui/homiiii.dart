@@ -10,14 +10,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home>
-    //with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin 
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin 
     {
-  //TabController _tabController;
+  TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    //_tabController = TabController(initialIndex: 0, length: 2, vsync: this);
+    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
   }
 
   @override
@@ -27,21 +27,27 @@ class _HomeState extends State<Home>
 
   @override
   Widget build(BuildContext context) {
-   // super.build(context);
+    super.build(context);
     return NestedScrollView(
+      
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return [
           SliverAppBar(
-            backgroundColor: Colors.deepPurple[800],
-            centerTitle: true,
-            title: Text("TexT"),
+            elevation: 10,
+            forceElevated: true,
+           //  titleSpacing: ,
+           toolbarHeight: 55,
+             //flexibleSpace: FlexibleSpaceBar(titlePadding: ,),
+            shadowColor: Colors.black,
+            backgroundColor: Colors.deepPurple[400],
+            //centerTitle: true,
+            title: Text("Qurani kərim",style: TextStyle(color: Colors.white),),
             pinned: false,
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.info_outline),
+                icon: Icon(Icons.album),
                 onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => null));
+                  
                 },
               )
             ],
@@ -52,6 +58,6 @@ class _HomeState extends State<Home>
     );
   }
 
-  //@override
-  //bool get wantKeepAlive => true;
+  @override
+  bool get wantKeepAlive => true;
 }

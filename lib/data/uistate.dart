@@ -21,7 +21,7 @@ class UiState extends ChangeNotifier {
 
 
   //static bool translate = false;
-  static bool makna = false;
+ 
 
   set fontSize(newValue) {
     ayahsize = newValue;
@@ -53,13 +53,13 @@ class UiState extends ChangeNotifier {
 
   _loadFromPrefs() async {
     await _initPrefs();
-    erebce = prefs.getBool("switchState") ?? true;
+    erebce = prefs.getBool("switchState1") ?? true;
     notifyListeners();
   }
 
   _saveToPrefs() async {
     await _initPrefs();
-    prefs.setBool("switchState", erebce);
+    prefs.setBool("switchState1", erebce);
   }
 
   bool get terjemahan => translate;
@@ -75,19 +75,14 @@ class UiState extends ChangeNotifier {
 
   _loadFromPrefs2() async {
     await _initPrefs2();
-    translate = prefs.getBool("switchState") ?? true;
+    translate = prefs.getBool("switchState2") ?? true;
     notifyListeners();
   }
 
   _saveToPrefs2() async {
     await _initPrefs2();
-    prefs.setBool("switchState", translate);
+    prefs.setBool("switchState2", translate);
   }
 
-  set tafsir(newValue) {
-    makna = newValue;
-    notifyListeners();
-  }
-
-  bool get tafsir => makna;
+ 
 }
