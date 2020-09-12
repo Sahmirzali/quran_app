@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quran_app/data/utils/style.dart';
 import 'package:quran_app/ui/icon/surah_figure_icons.dart';
 
 class CardSurah extends StatelessWidget {
@@ -12,23 +11,28 @@ class CardSurah extends StatelessWidget {
       this.onTap,
       this.endnumber});
 
-  String endnumber = "0";
-  final String title, subtitle, surah, ayah, arabic;
+  //String endnumber = "0";
+  final String title, subtitle, surah, ayah, arabic, endnumber;
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     var color = 0xff1D1729;
-    var color2 = 0xff7723E2;
-    var colorarabic = 0xff6E0BEC;
+    var color2 = 0xffA44AFF;
+    var colorarabic = 0xffA44AFF;
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 3.0,
+        ),
         child: Card(
-          color: Colors.white,
+          //color: Colors.white,
           elevation: 0.0,
           child: Container(
-            padding: EdgeInsets.only(left: 12, right: 12, bottom: 0),
+            padding: EdgeInsets.only(
+              left: 12,
+              right: 12,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -40,7 +44,7 @@ class CardSurah extends StatelessWidget {
                         Container(
                           height: 65.0,
                           decoration: new BoxDecoration(
-                            color: Colors.white,
+                            //color: Colors.white,
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -56,7 +60,9 @@ class CardSurah extends StatelessWidget {
                                 Text(
                                   surah,
                                   style: TextStyle(
-                                      fontSize: 15, color: Colors.black),
+                                    fontSize: 15,
+                                   // color: Colors.black,
+                                  ),
                                 ),
                               ],
                             ),
@@ -74,7 +80,7 @@ class CardSurah extends StatelessWidget {
                                 fontFamily: 'Poppins',
                                 fontSize: 16.7,
                                 fontWeight: FontWeight.w500,
-                                color: Color(color),
+                                //color: Color(color),
                               ),
                             ),
                             SizedBox(
@@ -96,10 +102,6 @@ class CardSurah extends StatelessWidget {
                         ),
                       ],
                     ),
-
-                    /*SizedBox(
-                      width: 14,
-                    ),*/
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text(
@@ -107,7 +109,7 @@ class CardSurah extends StatelessWidget {
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                           color: Color(colorarabic),
-                          fontSize: 30,
+                          fontSize: 33,
                           fontFamily: 'Uthman',
                           height: 2,
                         ),
@@ -116,11 +118,11 @@ class CardSurah extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 4,
+                  height: 2,
                 ),
                 Divider(
-                  color: Colors.grey[400],
-                ),
+                    //color: Colors.grey[400],
+                    ),
               ],
             ),
           ),

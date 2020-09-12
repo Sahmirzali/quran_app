@@ -2,26 +2,27 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:quran_app/ui/about.dart';
 import 'package:quran_app/ui/bookmark.dart';
 import 'package:quran_app/ui/search_ayahs.dart';
 import 'package:quran_app/ui/settings.dart';
 
-import 'homiiii.dart';
+import 'list_all_quran.dart';
 
-class Home_Page extends StatefulWidget {
-  Home_Page({Key key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key}) : super(key: key);
 
   @override
-  _Home_PageState createState() => _Home_PageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _Home_PageState extends State<Home_Page> {
+class _HomePageState extends State<HomePage> {
   PageController _pageController = PageController();
   List<Widget> _screen = [
-    Home(),
+    ListAllSurah(),
     Search_Ayahs(),
     Bookmark(),
-    Settings(),
+    About(),
   ];
 
   int _selectedIndex = 0;
@@ -44,7 +45,8 @@ class _Home_PageState extends State<Home_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      
+      //backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
         children: _screen,
@@ -52,36 +54,40 @@ class _Home_PageState extends State<Home_Page> {
         physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
+            
             icon: Icon(
               Icons.home,
-              color: _selectedIndex == 0 ? Colors.blue : Colors.grey,
+              color: _selectedIndex == 0 ? Colors.deepPurple[400] : Colors.grey,
             ),
             title: Text(
               'Home',
               style: TextStyle(
-                color: _selectedIndex == 0 ? Colors.blue : Colors.grey,
+                color: _selectedIndex == 0 ? Colors.deepPurple[400] : Colors.grey,
               ),
             ),
           ), 
           BottomNavigationBarItem(
             icon: Icon(
               Icons.search,
-              color: _selectedIndex == 1 ? Colors.blue : Colors.grey,
+              color: _selectedIndex == 1 ? Colors.deepPurple[400] : Colors.grey,
             ),
             title: Text(
               'Search',
               style: TextStyle(
-                color: _selectedIndex == 1 ? Colors.blue : Colors.grey,
+                color: _selectedIndex == 1 ? Colors.deepPurple[400] : Colors.grey,
               ),
             ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.bookmark,
-              color: _selectedIndex == 2 ? Colors.blue : Colors.grey,
+              color: _selectedIndex == 2 ? Colors.deepPurple[400] : Colors.grey,
             ),
             title: Text(
               'Bookmark',
@@ -93,7 +99,7 @@ class _Home_PageState extends State<Home_Page> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.settings,
-              color: _selectedIndex == 3 ? Colors.blue : Colors.grey,
+              color: _selectedIndex == 3 ? Colors.deepPurple[400] : Colors.grey,
             ),
             title: Text(
               'Settings',
@@ -117,116 +123,3 @@ class _Home_PageState extends State<Home_Page> {
   }
 }
 
-/*import 'package:flutter/material.dart';
-import 'package:quran_app/data/utils/data.dart';
-import 'package:quran_app/ui/search_ayahs.dart';
-
-import 'listpage/list_all_quran.dart';
-
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              backgroundColor: Colors.deepPurple[800],
-              centerTitle: true,
-              title: Text("Text"),
-              pinned: false,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.info_outline),
-                  onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => null));
-                  },
-                )
-              ],
-              bottom: TabBar(
-                controller: _tabController,
-                indicatorColor: Colors.blue,
-                indicatorWeight: 4,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white.withOpacity(0.4),
-                labelPadding: EdgeInsets.symmetric(horizontal: 30),
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                    child: Text(
-                      'Text1',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Text2',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ];
-        },
-        body: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            All_Surah(),
-            Search_Ayahs(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home),title: Text('Home')),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark),title: Text('Bookmark')),
-          BottomNavigationBarItem(icon: Icon(Icons.settings),title: Text('Settings')),
-        ],
-      ),
-    );
-  }
-} */
-
-/*import 'package:flutter/material.dart';
-
-class Home_Page extends StatefulWidget {
-  Home_Page({Key key}) : super(key: key);
-
-  @override
-  _Home_PageState createState() => _Home_PageState();
-}
-
-class _Home_PageState extends State<Home_Page> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-       child: null,
-    );
-  }
-} */

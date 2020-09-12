@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quran_app/data/themes.dart';
 
 import 'package:quran_app/ui/home_page.dart';
 
@@ -10,7 +11,7 @@ void main() => runApp(
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => UiState()),
-          //ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+          ChangeNotifierProvider(create: (_) => ThemeNotifier()),
         ],
         child: MyApp(),
       ),
@@ -20,18 +21,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-      ]);
+      DeviceOrientation.portraitUp,
+    ]);
+
+ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Quran_app',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: _themeNotifier.darkmode ? _themeNotifier.dark : _themeNotifier.light,
       initialRoute: '/',
       routes: {
-        '/': (context) => Home_Page(),
+        '/': (context) => HomePage(),
         //'/settings': (context) => Settings(),
         //'/about': (context) => About(),
       },

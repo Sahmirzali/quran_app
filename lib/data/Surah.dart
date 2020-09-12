@@ -2,23 +2,31 @@
 //
 //     final surah = surahFromJson(jsonString);
 
+// bu dbden bookmark db sine ayetler gibiyor icona tiklayinca insert ayah
 import 'dart:convert';
 
 class Surah {
-  Surah({
-    this.surahNumber,
-    this.verseNumber,
-    this.surahName,
-    this.text,
-    this.translation,
-    this.id,
-  });
+  Surah(
+      {this.surahNumber,
+      this.verseNumber,
+      this.surahName,
+      this.text,
+      this.translation,
+      this.id,
+      this.isBookmarked,
+      this.idNum
+      // this.idNum,
+      });
   int id;
+  bool isBookmarked;
   String surahNumber;
   String verseNumber;
   String surahName;
   String text;
   String translation;
+  int idNum;
+  //int idNum;
+  //evet hocam hatta ekleyelim 1 dakika
 
   factory Surah.fromRawJson(String str) => Surah.fromJson(json.decode(str));
 
@@ -31,25 +39,38 @@ class Surah {
         text: json["text"],
         translation: json["translation"],
         id: json["id"],
+        isBookmarked: json["isBookmarked"] == 1,
+        idNum: json["idNum"],
+        //   idNum: json["idNum"],
       );
+// oraya bisey eklersek burada bir problem olmaz ki ?
 
-      Map<String, dynamic> toMap() {
+// Hocam galibe isBookmark i bookmark db sinde olusturmak gerek ?
+//hocam orada oluşturursak o zaman bookmark.dart sayfasında nasıl görebilriiz ki
+//burası değil de biraz önce bi yer vardı
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'text': text,
       'translation': translation,
-      'surahName': surahName,
-      'surahNumber': surahNumber,
-      'verseNumber': verseNumber,
-    };
+      'surah_number': surahNumber,
+      'verse_number': verseNumber,
+      'surah_name': surahName,
+      "isBookmarked": isBookmarked ? 1 : 0,
+      'idNum': idNum,
+      //  'idNum': idNum,
+    }; // burayada ekleyeyim mi ? bu ikisi aynı metot? tamam da aynı işi yapıyorlar neden oluştu diğeri? sqfliteden once json kullaniyordum oradan db ye gidiyordu
+    //farklı metot yazmana gerek yok ki sqflite da json tipinde veri alıp gönderiyor tamam hocam anladim
+    //şuan tamam gibi görünüyor. veritabanı oluştu
   }
-  // hocam null o shared prefden :)  olusmamis tekrar basmak gerek hocam bisey soylicem
-  // bu bende bazi ayetler mealda birlesik oldugu icin int tutmak olmuyor, o yuzden string tutuyorum
+
   Map<String, dynamic> toJson() => {
         "surah_number": surahNumber,
         "verse_number": verseNumber,
         "text": text,
         "translation": translation,
-        "surah_name": surahName
+        "surah_name": surahName,
+        "isBookmarked": isBookmarked ? 1 : 0,
+        "idNum": idNum,
       };
 }

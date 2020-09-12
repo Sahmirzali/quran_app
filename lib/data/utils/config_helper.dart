@@ -5,6 +5,7 @@ class ConfigHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(sure_id, ayet_id);
   }
+
   Future<void> addSharedOther(String sureadi, String sure_id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('sonSureAdi', sureadi);
@@ -15,7 +16,6 @@ class ConfigHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(sureno);
   }
-
 
   Future<String> getSharedString(String name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -19,6 +19,15 @@ class SurahDatabase {
   String _text = "text";
   String _translation = "translation";
   String _surahName = "surah_name";
+  String _isBookmarked = "isBookmarked";
+  String _idNum = "idNum";
+  // neden orda int yazdik o zaman o.O Buradakiler column name hmm anladim pardon
+  // hocam bi yapsam olur mu ?
+  //buraya bi değişken daha ekle sqflitedan çekerken hepsi bir gelsin sana. işaretleyince update yapar bookmark = 1 dersin biter.
+  //diğer türlü bii dünya sp kullanman gerek her ayet için.
+  // simdi ben bu dbden bookmark db sine ayetleri yolluyorum.  burada yazmam dogru olur mu ?
+  //için ayrı db tutmana gerek yok ki
+  // bookmark sayfasinda nasil gostercem peki ? bu dbni mi ?gostercem? evet bak
   SurahDatabase._internal();
 
   factory SurahDatabase() {
@@ -62,7 +71,7 @@ class SurahDatabase {
       try {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {}
-       final byteData = await rootBundle.load('assets/DataBase/surah.db');
+      final byteData = await rootBundle.load('assets/DataBase/surah.db');
       final file = File(path);
       await file.writeAsBytes(byteData.buffer
           .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
@@ -74,16 +83,12 @@ class SurahDatabase {
   }
 
   Future _createDB(Database db, int version) async {
-    //print("CREATE DB METHODU CALISTI TABLO OLUSTURULACAK");
+    //print("CREATE DB METHODU CALISTI TABLO OLUSTURULACAK"); // burada ?
     await db.execute(
-        "CREATE TABLE $_surahTableName ($_id INTEGER PRIMARY KEY AUTOINCREMENT,$_surahNumber TEXT, $_text TEXT, $_verseNumber TEXT ,$_translation TEXT,$_surahName TEXT)");
+        "CREATE TABLE $_surahTableName ($_id INTEGER PRIMARY KEY AUTOINCREMENT,$_surahNumber TEXT, $_text TEXT, $_verseNumber TEXT ,$_translation TEXT,$_surahName TEXT, $_isBookmarked INTEGER, $_idNum INTEGER)");
   }
-// burada mi ? evet zormu :) ? aynı işlemi tekrar edersin. içindeki listleri farklı tabloya kaydedersin
-//çekerken join işlemi gerekir. internette inner join diye aratabilirsin. iki tabloyu birleştirmeye yarar
-//yada id ile 2.tablodan çeker sonra class içindeki list içine atarsın
-// hocam sizce performans acisindan bu app de 1 tane nested json kullanmam daha mi iyi olurdu ?
-//json okuma hızını altta görüyorsun :) yani farketmez mu ? toplu veriiçin o zaman listeli falan nested json daha iyi olurdu buna gore tabii
-// onunla filitreleme listeleme vs yapamazsın. pagination yapamazsın. db en sağlıklısı olur telefonda yermi doldu ? acaba yoo bitti kaydetme şlemi
+
+//burası surelerin tablosu işte hocam surah ismi verilmis rastgele  isme takilmayin. ayetler icin . sureler kismi burasi
   Future<List<Surah>> searchSurah(String text) async {
     var db = await _getDatabase();
     var sonuc = await db.query(_surahTableName,
@@ -101,10 +106,33 @@ class SurahDatabase {
     var db = await _getDatabase();
 
     var sonuc = await db.query(_surahTableName,
-        orderBy: '$_surahNumber', where: '$_surahNumber = ?', whereArgs: [number]);
+        orderBy: '$_surahNumber',
+        where: '$_surahNumber = ?',
+        whereArgs: [number]);
 
-    List<Surah> surahLisT =
-        sonuc.map((e) => Surah.fromJson(e)).toList();
+    List<Surah> surahLisT = sonuc.map((e) => Surah.fromJson(e)).toList();
+    return surahLisT;
+  }
+
+  Future<void> setBookmark(Surah surah, bool isBookmark) async {
+    var db = await _getDatabase();
+    surah.isBookmarked = isBookmark;
+    var id = surah.id;
+    var s = surah.toMap();
+    await db.update(_surahTableName, s, where: '$_id = ?', whereArgs: [id]);
+    //hocam uygulamayi silip tekrar calistayimmi ? 1 aye hala saved kalmis şuan sorun yok ama kayboldum projede deminki yazdıklarımız nerede
+    //bookmark ekliyoduk ya kodlari yazmistik nasil kaybolur ?
+  }
+
+  Future<List<Surah>> getBookmarks() async {
+    //telefondaki dosya sildin değil mi tekrar siler misin tamam sildim calistirayimmi ? çal
+    var db = await _getDatabase();
+
+    var sonuc = await db.query(_surahTableName,
+        orderBy: '$_surahNumber', where: '$_isBookmarked = ?', whereArgs: [1]);
+// bu sana bookmarkları dönecek tek 1 veriyi heryerde kullanmış olacaksın
+// idnum a gerek yok mu simdi ? gerek yok onun yerine isbookmark ekle. değeri hep 0 olsun
+    List<Surah> surahLisT = sonuc.map((e) => Surah.fromJson(e)).toList();
     return surahLisT;
   }
 

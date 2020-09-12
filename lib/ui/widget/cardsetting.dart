@@ -12,11 +12,22 @@ class CardSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var textScale = MediaQuery.of(context).textScaleFactor;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
       child: Card(
         elevation: 0,
-        child: ListTile(title: Text(title), trailing: leading),
+        child: ListTile(
+            title: Text(
+              title,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 15.3 * textScale,
+                fontWeight: FontWeight.w400,
+                //color: Colors.deepPurple[900],
+              ),
+            ),
+            trailing: leading),
       ),
     );
   }

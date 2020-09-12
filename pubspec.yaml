@@ -36,7 +36,8 @@ dependencies:
   path_provider: ^1.6.14
   permission_handler: ^5.0.0+hotfix.5
   flushbar: ^1.10.4
-  responsive_widgets: ^2.0.1
+  draggable_scrollbar: ^0.0.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -71,9 +72,13 @@ flutter:
         - asset: icon/SurahFigure.ttf
     - family: Uthman
       fonts:
-        - asset: fonts/UthmanTN1 Ver10.otf
+        - asset: fonts/ScheherazadeRegOT (1).ttf
+
     - family: Poppins
       fonts:
+        - asset: fonts/Poppins-Italic.ttf
+          weight: 400
+          style: italic
         - asset: fonts/Poppins-Regular.ttf
           weight: 400
         - asset: fonts/Poppins-Medium.ttf

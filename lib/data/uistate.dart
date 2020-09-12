@@ -1,44 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:quran_app/ui/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UiState extends ChangeNotifier {
   SharedPreferences prefs;
+  SharedPreferences prefs1;
   bool erebce;
   bool translate;
 
-  static double ayahsize = 1;
-  static double textsize = 0.4;
+  double ayahsize;
+  double textsize;
 
   UiState() {
     erebce = true;
     _loadFromPrefs();
     translate = false;
     _loadFromPrefs2();
+    ayahsize = 10;
+    _loadFromPrefs3();
+    textsize = 10;
+    _loadFromPrefs4();
   }
 
-
   //static bool translate = false;
- 
 
   set fontSize(newValue) {
     ayahsize = newValue;
+    _saveToPrefs3();
+    notifyListeners();
+  }
+
+  _loadFromPrefs3() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    ayahsize = prefs.getDouble("ayahsize") ?? 50;
 
     notifyListeners();
   }
 
-  double get fontSize => ayahsize * 40;
-  double get sliderFontSize => ayahsize;
+  _saveToPrefs3() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setDouble("ayahsize", ayahsize);
+  }
 
-  set fontSizetext(newValue) {
-    textsize = newValue;
+  double get fontSize => ayahsize;
+
+  set fontSizetext(newValue1) {
+    textsize = newValue1;
+    _saveToPrefs4();
     notifyListeners();
   }
 
-  double get fontSizetext => textsize * 35;
-  double get sliderFontSizetext => textsize;
+  _loadFromPrefs4() async {
+    SharedPreferences prefs1 = await SharedPreferences.getInstance();
+    textsize = prefs1.getDouble("textsize") ?? 15;
+
+    notifyListeners();
+  }
+
+  _saveToPrefs4() async {
+    SharedPreferences prefs1 = await SharedPreferences.getInstance();
+    prefs1.setDouble("textsize", textsize);
+  }
+
+  double get fontSizetext => textsize;
 
   bool get arabic => erebce;
   set arabic(newValue) {
@@ -83,6 +107,4 @@ class UiState extends ChangeNotifier {
     await _initPrefs2();
     prefs.setBool("switchState2", translate);
   }
-
- 
 }

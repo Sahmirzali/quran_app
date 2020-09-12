@@ -1,4 +1,4 @@
-import 'dart:async';
+/*import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -263,7 +263,7 @@ class _ListAllSurahState extends State<ListAllSurah> {
   }
 }
 
-
+*/
 
 /*Container(
         width: 350,
