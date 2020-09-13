@@ -6,12 +6,15 @@ class ThemeNotifier with ChangeNotifier {
   bool _darkmode;
 
   ThemeData light = ThemeData(
-
     brightness: Brightness.light,
     primarySwatch: Colors.blue,
     scaffoldBackgroundColor: Color(0xffFCFFFE),
     toggleableActiveColor: Color(0xffA44AFF),
-    
+    sliderTheme: SliderThemeData(
+      activeTrackColor: Color(0xffA44BFF),
+      inactiveTrackColor: Color(0xffCF9FFF),
+      thumbColor: Color(0xffA44AFF),
+    ),
   );
   ThemeData dark = ThemeData(
     primarySwatch: MaterialColor(0xff091945, {
@@ -305,7 +308,7 @@ class ThemeNotifier with ChangeNotifier {
   }
 
   _initPrefsdark() async {
-    if (prefs == null) prefs = await SharedPreferences.getInstance(); 
+    if (prefs == null) prefs = await SharedPreferences.getInstance();
   }
 
   _loadFromPrefsdark() async {

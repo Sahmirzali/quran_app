@@ -99,7 +99,6 @@ class _DetailSurahState extends State<DetailSurah> {
         if (snapshot.hasData) {
           ayahList = snapshot.data;
         }
-
         return snapshot.hasData
             ? Column(
                 mainAxisSize: MainAxisSize.min,

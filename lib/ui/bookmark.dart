@@ -170,6 +170,7 @@ class _BookmarkState extends State<Bookmark> {
                           IconButton(
                                         icon: Icon(
                                           Icons.content_copy,
+                                          color: Colors.white,
                                         ),
                                         onPressed: () {
                                           Clipboard.setData(
@@ -194,6 +195,7 @@ class _BookmarkState extends State<Bookmark> {
                         ),
                         IconButton(
                           icon: Icon(Icons.more_vert),
+                          color: Colors.white,
                           onPressed: () {
                             Navigator.push(
                                 context,

@@ -38,9 +38,15 @@ dependencies:
   flushbar: ^1.10.4
   draggable_scrollbar: ^0.0.4
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+ 
+  
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
