@@ -57,13 +57,8 @@ class CardSurah extends StatelessWidget {
                                   //color: Colors.blue,
                                   size: 47.0,
                                 ),
-                                Text(
-                                  surah,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                   // color: Colors.black,
-                                  ),
-                                ),
+                                _customTextWidget,
+                                //ama böyle tek olacaksa get ile çıkarabilirsiniz. örnek olarak yazayım sizin için
                               ],
                             ),
                           ),
@@ -130,67 +125,12 @@ class CardSurah extends StatelessWidget {
       ),
     );
   }
-}
 
-/*ListTile(
-                    onTap: onTap,
-                    title: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        title,
-                        style: AppStyle.title,
-                      ),
-                    ),
-                    subtitle: Text(subtitle, style: AppStyle.subtitle),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                  ),*/
-/*
-                  AppStyle.spaceH5,
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Text('Surat Ke', style: AppStyle.end2subtitle),
-                            AppStyle.spaceH5,
-                            Text(
-                              surah,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Text('Ayat', style: AppStyle.end2subtitle),
-                            AppStyle.spaceH5,
-                            Text(
-                              ayah,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Text('Arabic', style: AppStyle.end2subtitle),
-                            AppStyle.spaceH5,
-                            Text(
-                              arabic,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Text('endNumber', style: AppStyle.end2subtitle),
-                            AppStyle.spaceH5,
-                            Text(
-                              endnumber,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),*/
+  Widget get _customTextWidget => Text(
+        surah,
+        style: TextStyle(
+          fontSize: 15,
+          // color: Colors.black,
+        ),
+      );
+}

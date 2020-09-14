@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:quran_app/data/DbHelper.dart';
 import 'package:quran_app/data/Surah.dart';
 
-
 import 'package:quran_app/data/themes.dart';
 import 'package:quran_app/data/uistate.dart';
 import 'package:quran_app/data/utils/config_helper.dart';
@@ -15,6 +14,8 @@ import 'package:quran_app/data/utils/style.dart';
 import 'package:quran_app/ui/settings.dart';
 
 import 'package:path/path.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'dart:async';
 
@@ -48,16 +49,22 @@ class DetailSurah extends StatefulWidget {
 class _DetailSurahState extends State<DetailSurah> {
   var database;
   List<Surah> ayahList;
+  int _kaldigimAyet = 0;
+
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
 
   @override
   void initState() {
+    super.initState();
+
     initDb();
-    ConfigHelper().getShared(widget.indexx.toString()).then((value) => {
+    ConfigHelper.getShared(widget.indexx.toString()).then((value) => {
           setState(() {
             ayetid = value;
           }),
         });
-    super.initState();
   }
 
   Future initDb() async {
@@ -79,11 +86,26 @@ class _DetailSurahState extends State<DetailSurah> {
      */
   }
 
+  Future<void> _kaldigimAyeteGit() async {
+    int _kaldigimAyetShared = await ConfigHelper.getkaldigimAyet(widget.indexx);
+    _kaldigimAyet = _kaldigimAyetShared != null ? _kaldigimAyetShared : 0;
+
+    print("çalıştı mı kontrol ediyoruz..");
+    if (_kaldigimAyet != 0) {
+      print("kaldığım ayet: $_kaldigimAyet");
+      itemScrollController.jumpTo(
+        index: _kaldigimAyet,
+        //duration: Duration(seconds: 1),
+      );
+    }
+  }
+
   double deviceHeight(BuildContext context) =>
       MediaQuery.of(context).size.height;
-  final _controllAyet = ScrollController();
+
   double deviceWidth(BuildContext context) => MediaQuery.of(context).size.width;
   final ScrollController _arrowsController = ScrollController();
+
   String ayetid;
   @override
   Widget build(BuildContext context) {
@@ -104,60 +126,74 @@ class _DetailSurahState extends State<DetailSurah> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                    child: DraggableScrollbar.semicircle(
-                      controller: _arrowsController,
-                      child: ListView.builder(
-                          controller: _arrowsController,
+                    child: Scrollbar(
+                      child: ScrollablePositionedList.builder(
+                          itemScrollController: itemScrollController,
                           itemCount: snapshot.data.length,
                           itemBuilder: (BuildContext context, int i) {
                             return i == 0
                                 ? Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      SizedBox(
-                                        height: 21,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 4,
-                                              ),
-                                              IconButton(
-                                                icon: Icon(
-                                                    Icons.keyboard_backspace),
-                                                onPressed: () =>
-                                                    Navigator.of(context).pop(),
-                                              ),
-                                              Text(
-                                                "${widget.detail} surəsi",
-                                                style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontSize: 20 * textScale,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: thememode.darkmode ? Colors.white : Color(titleColor),
-                                                  //color: Colors.deepPurple[900],
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 40.0,
+                                            bottom: 16,
+                                            left: 2,
+                                            right: 6),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 4,
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.more_vert),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Settings()));
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
+                                                IconButton(
+                                                  icon: Icon(
+                                                      Icons.keyboard_backspace),
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(),
+                                                ),
+                                                Text(
+                                                  "${widget.detail} surəsi",
+                                                  style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 20 * textScale,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: thememode.darkmode
+                                                        ? Colors.white
+                                                        : Color(titleColor),
+                                                    //color: Colors.deepPurple[900],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                  icon: Icon(
+                                                      Icons.arrow_downward),
+                                                  onPressed: () {
+                                                    _kaldigimAyeteGit();
+                                                  },
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(Icons.more_vert),
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Settings()));
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       Container(
                                         child: Center(
@@ -268,11 +304,11 @@ class _DetailSurahState extends State<DetailSurah> {
                                                       snapshot
                                                           .data[i].verseNumber,
                                                       style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          //color:Colors.black87,
-                                                              ),
+                                                        fontFamily: 'Poppins',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        //color:Colors.black87,
+                                                      ),
                                                     ),
 
                                                     SizedBox(
@@ -314,7 +350,7 @@ class _DetailSurahState extends State<DetailSurah> {
                                                             ),
                                                             onPressed:
                                                                 () async {
-                                                              await ConfigHelper().addShared(
+                                                              await ConfigHelper.addShared(
                                                                   snapshot
                                                                       .data[i]
                                                                       .verseNumber,
@@ -326,7 +362,7 @@ class _DetailSurahState extends State<DetailSurah> {
                                                                   .data[i]
                                                                   .verseNumber;
 
-                                                              await ConfigHelper()
+                                                              await ConfigHelper
                                                                   .addSharedOther(
                                                                       widget
                                                                           .detail,
@@ -334,6 +370,11 @@ class _DetailSurahState extends State<DetailSurah> {
                                                                           .data[
                                                                               i]
                                                                           .verseNumber);
+                                                              await ConfigHelper
+                                                                  .kaldigimAyet(
+                                                                      widget
+                                                                          .indexx,
+                                                                      i);
 
                                                               setState(() {});
                                                             }),
@@ -447,11 +488,10 @@ class _DetailSurahState extends State<DetailSurah> {
                                                 Text(
                                                   snapshot.data[i].verseNumber,
                                                   style: TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                     // color: Colors.black87,
-                                                     ),
+                                                    fontFamily: 'Poppins',
+                                                    fontWeight: FontWeight.w500,
+                                                    // color: Colors.black87,
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   width: 20,
@@ -489,24 +529,26 @@ class _DetailSurahState extends State<DetailSurah> {
                                                                   .favorite_border,
                                                         ),
                                                         onPressed: () async {
-                                                          await ConfigHelper()
-                                                              .addShared(
-                                                                  snapshot
-                                                                      .data[i]
-                                                                      .verseNumber,
-                                                                  snapshot
-                                                                      .data[i]
-                                                                      .surahNumber
-                                                                      .toString());
+                                                          await ConfigHelper.addShared(
+                                                              snapshot.data[i]
+                                                                  .verseNumber,
+                                                              snapshot.data[i]
+                                                                  .surahNumber
+                                                                  .toString());
                                                           ayetid = snapshot
                                                               .data[i]
                                                               .verseNumber;
-                                                          await ConfigHelper()
+                                                          await ConfigHelper
                                                               .addSharedOther(
                                                                   widget.detail,
                                                                   snapshot
                                                                       .data[i]
                                                                       .verseNumber);
+                                                          await ConfigHelper
+                                                              .kaldigimAyet(
+                                                                  widget.indexx,
+                                                                  i);
+
                                                           setState(() {});
                                                         }),
                                                     IconButton(
@@ -578,6 +620,7 @@ class _DetailSurahState extends State<DetailSurah> {
                           }),
                     ),
                   ),
+                  //bir problem olmaz bence de ya
                   SizedBox(
                     height: 23,
                   ),

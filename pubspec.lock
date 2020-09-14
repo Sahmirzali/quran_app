@@ -107,6 +107,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
+  indexed_list_view:
+    dependency: "direct main"
+    description:
+      name: indexed_list_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.9"
   intl:
     dependency: transitive
     description:
@@ -226,6 +233,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.2+1"
+  scroll_to_index:
+    dependency: "direct main"
+    description:
+      name: scroll_to_index
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
+  scrollable_positioned_list:
+    dependency: "direct main"
+    description:
+      name: scrollable_positioned_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.7"
   shared_preferences:
     dependency: "direct main"
     description:

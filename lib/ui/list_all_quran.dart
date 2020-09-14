@@ -29,13 +29,13 @@ class _ListAllSurahState extends State<ListAllSurah>
     allSurahInfos = await serviceData.loadInfo();
     viewSurahList = allSurahInfos;
     for (var data in viewSurahList) {
-      data.endNumber = await ConfigHelper().getShared(data.index);
+      data.endNumber = await ConfigHelper.getShared(data.index);
     }
-    sonsureAdi = await ConfigHelper().getSharedString("sonSureAdi");
+    sonsureAdi = await ConfigHelper.getSharedString("sonSureAdi");
 
     if (sonsureAdi != null) {
-      sonsureNo = await ConfigHelper().getShared("sonSureNo");
-      sonAyet = await ConfigHelper().getShared(sonsureNo);
+      sonsureNo = await ConfigHelper.getShared("sonSureNo");
+      sonAyet = await ConfigHelper.getShared(sonsureNo);
 
       var s = sonAyet;
     }
@@ -76,14 +76,13 @@ class _ListAllSurahState extends State<ListAllSurah>
     var titleColor = 0xff803BE2;
     var screenSize = MediaQuery.of(context).size;
     var textScale = MediaQuery.of(context).textScaleFactor;
-   
+
     return allSurahInfos.isNotEmpty
         ? SingleChildScrollView(
             child: Column(
               children: [
-               
                 Padding(
-                  padding: const EdgeInsets.only(top: 39,left: 20,right: 8),
+                  padding: const EdgeInsets.only(top: 39, left: 20, right: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -237,7 +236,7 @@ class _ListAllSurahState extends State<ListAllSurah>
                     physics: ScrollPhysics(),
                     shrinkWrap: true,
                     children: viewSurahList.map((data) {
-                      return CardSurah(
+                      return CardSurah( //bir widget bu CardSurah gibi çook tekrar edecekse evet bu mantıklı
                         title: data.latin,
                         subtitle: data.type,
                         surah: data.index.toString(),
