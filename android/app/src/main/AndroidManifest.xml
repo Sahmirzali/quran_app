@@ -14,6 +14,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Qurani kərim və məalı"
         android:hardwareAccelerated="true"
+        
         android:icon="@mipmap/quranappicon">
         <activity
             
@@ -38,7 +39,7 @@
                  Flutter's first frame. -->
             <meta-data
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
-              android:resource="@drawable/launch_background"
+                android:resource="@drawable/launch_background"
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

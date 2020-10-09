@@ -18,8 +18,8 @@ class ServiceData {
     return data.map((model) => SurahInfo.fromJson(model)).toList();
   }
 
+
   Future<List<AllSurah>> loadSurah(String surahnum) async {
-    //print('alinacak sure:' + surahnum.toString());
     var response = await rootBundle.loadString(allSurah);
     Iterable data = json.decode(response);
 
@@ -30,7 +30,6 @@ class ServiceData {
         .where((surah) => surah.surahNumber == surahnum)
         .toList();
 
-    //print('result count ' + result.length.toString());
     return result;
   }
 }

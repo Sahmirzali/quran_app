@@ -1,3 +1,4 @@
+import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ class Search_Ayahs extends StatefulWidget {
 class _Search_AyahsState extends State<Search_Ayahs>
     with AutomaticKeepAliveClientMixin {
   List<Surah> searchhResultList = [];
+  List<String> highlights = [];
   ServiceData serviceData;
   SurahDatabase db = SurahDatabase();
 
@@ -102,7 +104,12 @@ class _Search_AyahsState extends State<Search_Ayahs>
                 } else if (text.length >= 2) {
                   searchhResultList = await db.searchSurah(text);
                   // var a = await db.allSurah();
-                  setState(() {});
+
+                  setState(() {
+                    highlights = [text];
+                  });
+
+            
                 }
               },
               controller: _textController,
@@ -115,139 +122,134 @@ class _Search_AyahsState extends State<Search_Ayahs>
           height: 20,
         ),
         Expanded(
-          child: Scrollbar(
-            isAlwaysShown: true,
-            controller: _arrowsController,
-            child: MediaQuery.removePadding(
-              removeTop: true,
-              context: context,
-              child: ListView.builder(
-                controller: _arrowsController,
-                physics: AlwaysScrollableScrollPhysics(),
-                itemCount: searchhResultList.length,
-                itemBuilder: (BuildContext context, int i) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 7.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: thememode.darkmode
-                                  ? Color(0xff152451)
-                                  : Color(0xFF863ED5)
-                                      .withOpacity(0.055433222222),
-                              borderRadius: BorderRadius.circular(10)),
-                          //color: Colors.grey,
-                          height: 47,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 16, right: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                //SizedBox(width: 0,),
-
-                                Text(
-                                  "${searchhResultList[i].surahNumber}.${searchhResultList[i].surahName} surəsi ${searchhResultList[i].verseNumber} ayə",
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    //color: Colors.black87,
+                child: Scrollbar(
+                  isAlwaysShown: true,
+                  controller: _arrowsController,
+                  child: MediaQuery.removePadding(
+                    removeTop: true,
+                    context: context,
+                    child: ListView.builder(
+                      controller: _arrowsController,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemCount: searchhResultList.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 7.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
                                     color: thememode.darkmode
-                                                  ? Colors.white
-                                                  : Colors.black87,
+                                        ? Color(0xff152451)
+                                        : Color(0xFF863ED5)
+                                            .withOpacity(0.055433222222),
+                                    borderRadius: BorderRadius.circular(10)),
+                                //color: Colors.grey,
+                                height: 47,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 16, right: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      //SizedBox(width: 0,),
+
+                                      Text(
+                                        "${searchhResultList[i].surahNumber}.${searchhResultList[i].surahName} surəsi ${searchhResultList[i].verseNumber} ayə",
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w500,
+                                          //color: Colors.black87,
+                                          color: thememode.darkmode
+                                              ? Colors.white
+                                              : Colors.black87,
+                                        ),
+                                      ),
+
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                              icon: Icon(
+                                                Icons.content_copy,
+                                              ),
+                                              onPressed: () {
+                                                Clipboard.setData(
+                                                  ClipboardData(
+                                                    text: searchhResultList[i]
+                                                        .translation,
+                                                  ),
+                                                );
+                                                Flushbar(
+                                                  //title: "Hey Ninja",
+                                                  message:
+                                                      "Ayə uğurla kopyalandı",
+                                                  duration:
+                                                      Duration(seconds: 3),
+                                                )..show(context);
+                                              }),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-
-                                SizedBox(
-                                  width: 20,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              if (ui.arabic)
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    searchhResultList[i].text,
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                      fontSize: ui.fontSize,
+                                      fontFamily: 'Uthman',
+                                      height: 1.5,
+                                    ),
+                                  ),
                                 ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                        icon: Icon(
-                                          Icons.content_copy,
-                                        ),
-                                        onPressed: () {
-                                          Clipboard.setData(
-                                            ClipboardData(
-                                              text: searchhResultList[i]
-                                                  .translation,
-                                            ),
-                                          );
-                                          Flushbar(
-                                            //title: "Hey Ninja",
-                                            message: "Ayə uğurla kopyalandı",
-                                            duration: Duration(seconds: 3),
-                                          )..show(context);
-                                        }),
+                              /* SizedBox(
+                          height: 20,
+                        ),*/
+                              if (ui.terjemahan)
+                                Column(
+                                  children: <Widget>[
+                                    AppStyle.spaceH5,
+                                    DynamicTextHighlighting(
+                                      caseSensitive: false,
+                                      color: Colors.deepPurple[300],
+                                      text: searchhResultList[i].translation,
+                                      highlights: highlights,
+                                      textDirection: TextDirection.ltr,
+                                      style: TextStyle(
+                                        color: thememode.darkmode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: ui.fontSizetext,
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        if (ui.arabic)
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              searchhResultList[i].text,
-                              textDirection: TextDirection.rtl,
-                              style: TextStyle(
-                                fontSize: ui.fontSize,
-                                fontFamily: 'Uthman',
-                                height: 1.5,
-                              ),
-                            ),
-                          ),
-                        /*ListTile(
-                                            leading: Column(
-                                              children: [
-                                                //Text(snapshot.data.text.keys.elementAt(i)),
-                                              ],
-                                            ),
-                                            title: Text(
-                                              '${snapshot.data[i].text}',
-                                              textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                fontSize: ui.fontSize,
-                                                height: 1.5,
-                                              ),
-                                            ),
-                                          ),*/
-                        SizedBox(
-                          height: 20,
-                        ),
-                        if (ui.terjemahan)
-                          Column(
-                            children: <Widget>[
-                              AppStyle.spaceH5,
-                              Text(
-                                searchhResultList[i].translation,
-                                textDirection: TextDirection.ltr,
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: ui.fontSizetext,
-                                ),
-                              ),
                             ],
                           ),
-                      ],
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
       ],
     );
   }

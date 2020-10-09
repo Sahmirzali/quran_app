@@ -32,7 +32,7 @@ class UiState extends ChangeNotifier {
 
   _loadFromPrefs3() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    ayahsize = prefs.getDouble("ayahsize") ?? 50;
+    ayahsize = prefs.getDouble("ayahsize") ?? 41;
 
     notifyListeners();
   }
@@ -52,7 +52,7 @@ class UiState extends ChangeNotifier {
 
   _loadFromPrefs4() async {
     SharedPreferences prefs1 = await SharedPreferences.getInstance();
-    textsize = prefs1.getDouble("textsize") ?? 15;
+    textsize = prefs1.getDouble("textsize") ?? 16;
 
     notifyListeners();
   }

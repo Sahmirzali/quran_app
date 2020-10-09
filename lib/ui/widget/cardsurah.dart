@@ -58,7 +58,7 @@ class CardSurah extends StatelessWidget {
                                   size: 47.0,
                                 ),
                                 _customTextWidget,
-                                //ama böyle tek olacaksa get ile çıkarabilirsiniz. örnek olarak yazayım sizin için
+                                //example
                               ],
                             ),
                           ),

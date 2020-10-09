@@ -43,5 +43,3 @@ class SurahInfo {
       };
 }
 
-// sureler icin datalar buradan geliyor . bu ama json 
-//bu model sureye mi ait şimdi evet

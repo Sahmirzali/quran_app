@@ -1,4 +1,3 @@
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +13,6 @@ import 'package:quran_app/data/utils/style.dart';
 import 'package:quran_app/ui/settings.dart';
 
 import 'package:path/path.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'dart:async';
@@ -29,11 +27,13 @@ class DetailSurah extends StatefulWidget {
   final endnumber;
 
   final String indexx;
+  int listIndex;
 
   DetailSurah(
       {Key key,
       @required this.detail,
       this.indexx,
+      this.listIndex,
       this.id,
       this.information,
       this.type,
@@ -67,12 +67,14 @@ class _DetailSurahState extends State<DetailSurah> {
         });
   }
 
+ 
+
   Future initDb() async {
     database = await openDatabase(
       join(await getDatabasesPath(), 'allsurah_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE allsurah(id INTEGER PRIMARY KEY, text TEXT, translation TEXT, surahNumber TEXT, verseNumber TEXT, surahName TEXT)", // bunu diyorum/belki öyledir. düzeltin yine de
+          "CREATE TABLE allsurah(id INTEGER PRIMARY KEY, text TEXT, translation TEXT, surahNumber TEXT, verseNumber TEXT, surahName TEXT)", 
         );
       },
       version: 1,
@@ -90,9 +92,7 @@ class _DetailSurahState extends State<DetailSurah> {
     int _kaldigimAyetShared = await ConfigHelper.getkaldigimAyet(widget.indexx);
     _kaldigimAyet = _kaldigimAyetShared != null ? _kaldigimAyetShared : 0;
 
-    print("çalıştı mı kontrol ediyoruz..");
     if (_kaldigimAyet != 0) {
-      print("kaldığım ayet: $_kaldigimAyet");
       itemScrollController.jumpTo(
         index: _kaldigimAyet,
         //duration: Duration(seconds: 1),
@@ -107,8 +107,10 @@ class _DetailSurahState extends State<DetailSurah> {
   final ScrollController _arrowsController = ScrollController();
 
   String ayetid;
+
   @override
   Widget build(BuildContext context) {
+    //print("listIndex: ${widget.listIndex}");
     var textScale = MediaQuery.of(context).textScaleFactor;
     var ui = Provider.of<UiState>(context);
     var thememode = Provider.of<ThemeNotifier>(context);
@@ -121,6 +123,7 @@ class _DetailSurahState extends State<DetailSurah> {
         if (snapshot.hasData) {
           ayahList = snapshot.data;
         }
+
         return snapshot.hasData
             ? Column(
                 mainAxisSize: MainAxisSize.min,
@@ -370,6 +373,12 @@ class _DetailSurahState extends State<DetailSurah> {
                                                                           .data[
                                                                               i]
                                                                           .verseNumber);
+
+                                                              await ConfigHelper
+                                                                  .setKaldigimSure(
+                                                                      widget
+                                                                          .listIndex);
+
                                                               await ConfigHelper
                                                                   .kaldigimAyet(
                                                                       widget
@@ -406,48 +415,57 @@ class _DetailSurahState extends State<DetailSurah> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(
+                                            /*SizedBox(
                                               height: 20,
-                                            ),
+                                            ),*/
                                             if (ui.arabic)
-                                              Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(
-                                                  snapshot.data[i].text,
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                  style: TextStyle(
-                                                    fontSize: ui.fontSize,
-                                                    fontFamily: "Uthman",
-                                                    height: 1.5,
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 21.2, bottom: 5.5),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    snapshot.data[i].text,
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    style: TextStyle(
+                                                      fontSize: ui.fontSize,
+                                                      fontFamily: "Uthman",
+                                                      height: 1.7,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            SizedBox(
+                                            /*  SizedBox(
                                               height: 23,
-                                            ),
+                                            ),*/
                                             if (ui.terjemahan)
-                                              Column(
-                                                children: <Widget>[
-                                                  AppStyle.spaceH5,
-                                                  Text(
-                                                    snapshot
-                                                        .data[i].translation,
-                                                    //toolbarOptions: ToolbarOptions(
-                                                    //  copy: true,
-                                                    //  selectAll: true,
-                                                    // ),
-                                                    textDirection:
-                                                        TextDirection.ltr,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: ui.fontSizetext,
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 28, bottom: 5),
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    AppStyle.spaceH5,
+                                                    Text(
+                                                      snapshot
+                                                          .data[i].translation,
+                                                      //toolbarOptions: ToolbarOptions(
+                                                      //  copy: true,
+                                                      //  selectAll: true,
+                                                      // ),
+                                                      textDirection:
+                                                          TextDirection.ltr,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize:
+                                                            ui.fontSizetext,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                           ],
                                         ),
@@ -462,7 +480,7 @@ class _DetailSurahState extends State<DetailSurah> {
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
                                         SizedBox(
-                                          height: 5,
+                                          height: 0,
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
@@ -479,7 +497,9 @@ class _DetailSurahState extends State<DetailSurah> {
                                           height: 47,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 16, right: 8),
+                                              left: 16,
+                                              right: 8,
+                                            ),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -544,6 +564,12 @@ class _DetailSurahState extends State<DetailSurah> {
                                                                   snapshot
                                                                       .data[i]
                                                                       .verseNumber);
+
+                                                          await ConfigHelper
+                                                              .setKaldigimSure(
+                                                                  widget
+                                                                      .listIndex);
+
                                                           await ConfigHelper
                                                               .kaldigimAyet(
                                                                   widget.indexx,
@@ -575,44 +601,53 @@ class _DetailSurahState extends State<DetailSurah> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        /* SizedBox(
                                           height: 20,
-                                        ),
+                                        ),*/
                                         if (ui.arabic)
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              snapshot.data[i].text,
-                                              textDirection: TextDirection.rtl,
-                                              style: TextStyle(
-                                                fontSize: ui.fontSize,
-                                                fontFamily: "Uthman",
-                                                height: 1.5,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 23, bottom: 5.5),
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                snapshot.data[i].text,
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                                style: TextStyle(
+                                                  fontSize: ui.fontSize,
+                                                  fontFamily: "Uthman",
+                                                  height: 1.7,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        SizedBox(
+                                        /* SizedBox(
                                           height: 23,
-                                        ),
+                                        ),*/
                                         if (ui.terjemahan)
-                                          Column(
-                                            children: <Widget>[
-                                              AppStyle.spaceH5,
-                                              Text(
-                                                snapshot.data[i].translation,
-                                                //toolbarOptions: ToolbarOptions(
-                                                //  copy: true,
-                                                //  selectAll: true,
-                                                // ),
-                                                textDirection:
-                                                    TextDirection.ltr,
-                                                style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: ui.fontSizetext,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 28, bottom: 5),
+                                            child: Column(
+                                              children: <Widget>[
+                                                AppStyle.spaceH5,
+                                                Text(
+                                                  snapshot.data[i].translation,
+                                                  //toolbarOptions: ToolbarOptions(
+                                                  //  copy: true,
+                                                  //  selectAll: true,
+                                                  // ),
+                                                  textDirection:
+                                                      TextDirection.ltr,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: ui.fontSizetext,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                       ],
                                     ),
@@ -620,9 +655,8 @@ class _DetailSurahState extends State<DetailSurah> {
                           }),
                     ),
                   ),
-                  //bir problem olmaz bence de ya
                   SizedBox(
-                    height: 23,
+                    height: 10,
                   ),
                 ],
               )

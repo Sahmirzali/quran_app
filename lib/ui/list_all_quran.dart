@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_app/data/themes.dart';
 import 'package:quran_app/ui/about.dart';
@@ -28,6 +32,7 @@ class _ListAllSurahState extends State<ListAllSurah>
   getSurahInfos() async {
     allSurahInfos = await serviceData.loadInfo();
     viewSurahList = allSurahInfos;
+
     for (var data in viewSurahList) {
       data.endNumber = await ConfigHelper.getShared(data.index);
     }
@@ -42,6 +47,8 @@ class _ListAllSurahState extends State<ListAllSurah>
 
     setState(() {});
   }
+
+  getYaddas() async {}
 
   int number = 0;
   @override
@@ -58,24 +65,36 @@ class _ListAllSurahState extends State<ListAllSurah>
 
   TabController _tabController;
 
-  /*@override
-  void initState() {
-    super.initState();
-    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
-  } */
+  var focusNode = new FocusNode();
 
   @override
   void dispose() {
+    focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     var thememode = Provider.of<ThemeNotifier>(context);
     var titleColor = 0xff803BE2;
     var screenSize = MediaQuery.of(context).size;
     var textScale = MediaQuery.of(context).textScaleFactor;
+
+    Directory klasor;
+    String sd;
+    deleteData() async {
+      klasor = await getExternalStorageDirectory();
+      sd = klasor.parent.parent.parent.parent.path;
+      if (Directory(join(sd, "QuranMeal")).existsSync() ||
+          Directory(join(sd, "AppName")).existsSync() ||
+          Directory(join(sd, "QuranData")).existsSync()) {
+        Directory(join(sd, "QuranMeal")).deleteSync(recursive: true);
+        Directory(join(sd, "AppName")).deleteSync(recursive: true);
+        Directory(join(sd, "QuranData")).deleteSync(recursive: true);
+      }
+    }
 
     return allSurahInfos.isNotEmpty
         ? SingleChildScrollView(
@@ -117,68 +136,82 @@ class _ListAllSurahState extends State<ListAllSurah>
                 SizedBox(
                   height: 0,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 5, left: 13, right: 13, bottom: 11),
-                  child: SizedBox(
-                    //height: 139.4,
-                    //width: double.infinity,
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0)),
-                      child: Stack(
-                        children: <Widget>[
-                          ClipRRect(
-                            child: Image.asset(
-                              'images/sonoxunan.jpg',
-                              fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: () async {
+                    int kalinanSureIndex = await ConfigHelper.getKaldigimSure();
+
+                    if (kalinanSureIndex != null) {
+                      SurahInfo data = viewSurahList[kalinanSureIndex];
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailSurah(
+                                    detail: data.latin,
+                                    indexx: data.index,
+                                    listIndex: kalinanSureIndex,
+                                    information: data.type,
+                                    type: data.type,
+                                    ayahcount: data.ayahCount,
+                                    endnumber: data.endNumber,
+                                  )));
+                      await getSurahInfos();
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 5, left: 13, right: 13, bottom: 11),
+                    child: SizedBox(
+                      //height: 139.4,
+                      //width: double.infinity,
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0)),
+                        child: Stack(
+                          children: <Widget>[
+                            ClipRRect(
+                              child: Image.asset(
+                                'images/sonoxunan.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          Positioned(
-                            bottom: MediaQuery.of(context).size.height / 15.8,
-                            left: MediaQuery.of(context).size.width / 17,
-                            child: Text(
-                              sonsureAdi == null ? " " : "$sonsureAdi",
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 19 * textScale,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
+                            Positioned(
+                              bottom: MediaQuery.of(context).size.height / 15.8,
+                              left: MediaQuery.of(context).size.width / 17,
+                              child: Text(
+                                sonsureAdi == null ? " " : "$sonsureAdi",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 19 * textScale,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: MediaQuery.of(context).size.height / 29.5,
-                            left: MediaQuery.of(context).size.width / 17,
-                            child: Text(
-                              sonsureAdi == null ? "" : "Ayə no:  $sonsureNo",
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 15 * textScale,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white),
+                            Positioned(
+                              bottom: MediaQuery.of(context).size.height / 29.5,
+                              left: MediaQuery.of(context).size.width / 17,
+                              child: Text(
+                                sonsureAdi == null ? "" : "Ayə no:  $sonsureNo",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 15 * textScale,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-
-                /* Container(
-                  child: Text(sonsureAdi == null
-                      ? " kaydetmediniz"
-                      : "Son Okunan : $sonsureAdi ayah:  $sonsureNo"),
-                ),
-                SizedBox(
-                  height: 10,
-                ), */
                 GestureDetector(
                   child: Container(
                     height: 50,
                     margin: const EdgeInsets.only(left: 20, right: 20, top: 8),
                     child: TextField(
+                      focusNode: focusNode,
                       textAlignVertical: TextAlignVertical.bottom,
                       autofocus: false,
                       decoration: InputDecoration(
@@ -229,38 +262,39 @@ class _ListAllSurahState extends State<ListAllSurah>
                 SizedBox(
                   height: 16,
                 ),
-                MediaQuery.removePadding(
-                  removeTop: true,
-                  context: context,
-                  child: ListView(
-                    physics: ScrollPhysics(),
-                    shrinkWrap: true,
-                    children: viewSurahList.map((data) {
-                      return CardSurah( //bir widget bu CardSurah gibi çook tekrar edecekse evet bu mantıklı
-                        title: data.latin,
-                        subtitle: data.type,
-                        surah: data.index.toString(),
-                        ayah: data.ayahCount.toString(),
-                        //ayah: number.toString(),
-                        arabic: data.arabic,
-                        endnumber: data.endNumber == null ? "" : data.endNumber,
-                        onTap: () async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailSurah(
-                                        detail: data.latin,
-                                        indexx: data.index,
-                                        information: data.type,
-                                        type: data.type,
-                                        ayahcount: data.ayahCount,
-                                        endnumber: data.endNumber,
-                                      )));
-                          await getSurahInfos();
-                        },
-                      );
-                    }).toList(),
-                  ),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  primary: true,
+                  padding: EdgeInsets.zero,
+                  itemCount: viewSurahList.length,
+                  itemBuilder: (context, i) {
+                    SurahInfo data = viewSurahList[i];
+                    return CardSurah(
+                      title: data.latin,
+                      subtitle: data.type,
+                      surah: data.index.toString(),
+                      ayah: data.ayahCount.toString(),
+                      arabic: data.arabic,
+                      endnumber: data.endNumber == null ? "" : data.endNumber,
+                      onTap: () async {
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailSurah(
+                                      detail: data.latin,
+                                      indexx: data.index,
+                                      listIndex: i,
+                                      information: data.type,
+                                      type: data.type,
+                                      ayahcount: data.ayahCount,
+                                      endnumber: data.endNumber,
+                                    )));
+                        await getSurahInfos();
+                        await deleteData();
+                      },
+                    );
+                  },
                 ),
                 SizedBox(
                   height: 2,
@@ -279,3 +313,37 @@ class _ListAllSurahState extends State<ListAllSurah>
   @override
   bool get wantKeepAlive => true;
 }
+
+/*
+child: ListView(
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    
+                    children: viewSurahList.map((data) {
+                      return CardSurah(
+                        title: data.latin,
+                        subtitle: data.type,
+                        surah: data.index.toString(),
+                        ayah: data.ayahCount.toString(),
+                        arabic: data.arabic,
+                        endnumber: data.endNumber == null ? "" : data.endNumber,
+                        onTap: () async {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailSurah(
+                                        detail: data.latin,
+                                        indexx: data.index,
+                                        listIndex: ,
+                                        information: data.type,
+                                        type: data.type,
+                                        ayahcount: data.ayahCount,
+                                        endnumber: data.endNumber,
+                                      )));
+                          await getSurahInfos();
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+                */

@@ -85,9 +85,7 @@ class _BookmarkState extends State<Bookmark> {
                       child: ListTile(
                         // leading: Text(" "),
                         title: Text(
-                          //burada nasil vercem peki hocam
-                          //getBookmarks ilemi ? toMap falan mi ? yapcam ? o sana surah list dönüyor sadece ekranda göstereceksin o kadar
-                          //vazgeçtim kalmasın otomatik id oluşutor zaten .. hocam bu bookmark sayfasinda boyle nasil gostercem anlamadim
+                          
                           " ${allsurahdata.surahNumber}. ${allsurahdata.surahName} surəsi ${allsurahdata.verseNumber} ayə",
                           style: TextStyle(
                             fontFamily: 'Poppins',
@@ -113,8 +111,7 @@ class _BookmarkState extends State<Bookmark> {
                             await db.setBookmark(allsurahdata, false);
 
                             getBookmarkList();
-                            //veritabanını oluştur %90 çalışır sorunsuz veritabani varya nasil yani olustur ? column eksik
-                            //
+                            
                           },
                           icon: Icon(
                             Icons.remove_circle_outline,
@@ -137,9 +134,9 @@ class _BookmarkState extends State<Bookmark> {
     var mysize = MediaQuery.of(context).size;
     var thememode = Provider.of<ThemeNotifier>(context);
     var ui = Provider.of<UiState>(context);
-    debugPrint(text.length.toDouble().toString());
-    debugPrint(translation.length.toDouble().toString());
-    debugPrint((text.length + translation.length).toString());
+    //debugPrint(text.length.toDouble().toString());
+    //debugPrint(translation.length.toDouble().toString());
+    //debugPrint((text.length + translation.length).toString());
     return Center(
       child: Material(
         type: MaterialType.transparency,
